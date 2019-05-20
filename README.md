@@ -1,50 +1,57 @@
-# kong-plugin-upstream-selector
+# Upstream selector plugin for Kong API Gateway
 
-## Install
- - clone the git repo
- - add luarock api key to environment variables (LUAROCKS_API_KEY)
+## Description
+The plugin facilitates to select an upstream, which name is given in the request header.
 
-## Build local development environment
+## Development environment
+
+### Checkout the Git repository
+ `git@github.com:emartech/kong-plugin-upstream-selector.git`
+### Add luarock api key to environment variables (LUAROCKS_API_KEY)
+
+### Use make commands for further steps
+
+#### Build local development environment
 
 `make build`
 
-## Start local development environment
+#### Start local development environment
 
 `make up`
 
-## Start local development environment
+#### Stop local development environment
 
 `make down`
 
-## Restart local development environment
+#### Restart local development environment
 
 `make restart`
 
-## Setup initially local development environment
+#### Setup initially local development environment
 
 `make dev-env`
 
-## Access local DB
+#### Access local DB
 
-- `make db`
+`make db`
 
-## Enter to the local development environment docker image shell
+#### Enter to the local development environment docker image shell
 
-- `make ssh`
+`make ssh`
 
-## Running all tests from project folder:
+#### Run all tests from project folder:
 
 `make test`
 
-## Running unit tests from project folder:
+#### Run unit tests from project folder:
 
 `make unit`
 
-## Running end to end tests from project folder:
+#### Run end to end tests from project folder:
 
 `make e2e`
 
-## Publish new release
+### Publish new release
  - rename rockspec file to the new version
  - change then version and source.tag in rockspec file
  - commit the changes
