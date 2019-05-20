@@ -1,4 +1,3 @@
-local responses = require "kong.tools.responses"
 local BasePlugin = require "kong.plugins.base_plugin"
 local Logger = require "logger"
 
@@ -13,19 +12,19 @@ end
 function UpstreamSelectorHandler:access(conf)
     UpstreamSelectorHandler.super.access(self)
 
-    local headers = ngx.req.get_headers()
+    local headers = kong.request.get_headers()
     local header_value = headers[conf.header_name]
     if not header_value then
         return
     end
 
-    local ok, _ = kong.service.set_upstream(header_value)
-    if not ok then
+    local success, _ = kong.service.set_upstream(header_value)
+    if not success then
         Logger.getInstance(ngx):logInfo({
             msg = "Upstream does not exist",
             upstream = header_value
         })
-        responses.send(400, "Bad request")
+        kong.response.exit(400, "Bad request")
     end
 end
 
