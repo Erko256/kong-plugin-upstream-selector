@@ -4,6 +4,7 @@ kong:
   depends_on:
     - kong-database
     - mockbin
+    - mockbin2
   environment:
     - KONG_DATABASE=postgres
     - KONG_PG_HOST=kong-database
@@ -40,6 +41,11 @@ kong-database:
     - POSTGRES_PASSWORD=kong
 
 mockbin:
+  image: mashape/mockbin
+  ports:
+    - 8080
+
+mockbin2:
   image: mashape/mockbin
   ports:
     - 8080
