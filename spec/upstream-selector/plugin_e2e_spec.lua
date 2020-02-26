@@ -5,7 +5,7 @@ describe("UpstreamSelector", function()
     local kong_sdk, send_request, send_admin_request
 
     setup(function()
-        helpers.start_kong({ custom_plugins = "upstream-selector" })
+        helpers.start_kong({ plugins = "upstream-selector" })
 
         kong_sdk = kong_client.create_kong_client()
         send_request = kong_client.create_request_sender(helpers.proxy_client())
@@ -35,7 +35,7 @@ describe("UpstreamSelector", function()
                 it("should create the plugin", function()
                     local success, _ = pcall(function()
                         kong_sdk.plugins:create({
-                            consumer_id = consumer.id,
+                            consumer = { id = consumer.id },
                             name = "upstream-selector",
                             config = {
                                 header_name = "Test-Header"
@@ -51,7 +51,7 @@ describe("UpstreamSelector", function()
                 it("should respond with an error", function()
                     local success, _ = pcall(function()
                         kong_sdk.plugins:create({
-                            consumer_id = consumer.id,
+                            consumer = { id = consumer.id },
                             name = "upstream-selector",
                             config = {}
                         })
@@ -65,7 +65,7 @@ describe("UpstreamSelector", function()
     end)
 
     describe("Upstream selector", function()
-        local service, route, plugin
+        local service, route, plugin, upstream
 
         before_each(function()
             service = kong_sdk.services:create({
@@ -78,6 +78,12 @@ describe("UpstreamSelector", function()
                 config = {
                     header_name = "Test-Header"
                 }
+            })
+            upstream = kong_sdk.upstreams:create({
+                name = "mockbin2"
+            })
+            target = kong_sdk.upstreams:add_target(upstream.id, {
+                target = "mockbin2:8080"
             })
         end)
 
@@ -104,6 +110,18 @@ describe("UpstreamSelector", function()
 
                 assert.are.equal(200, response.status)
             end)
+        end)
+
+        it("should set upstream based on header value", function()
+            local response = send_request({
+                method = "GET",
+                path = "/test-route",
+                headers = {
+                    ["Test-Header"] = "mockbin2"
+                }
+            })
+
+            assert.are.equal(200, response.status)
         end)
 
     end)

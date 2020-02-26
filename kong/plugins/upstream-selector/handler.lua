@@ -12,8 +12,7 @@ end
 function UpstreamSelectorHandler:access(conf)
     UpstreamSelectorHandler.super.access(self)
 
-    local headers = kong.request.get_headers()
-    local header_value = headers[conf.header_name]
+    local header_value = kong.request.get_header(conf.header_name)
     if not header_value then
         return
     end
